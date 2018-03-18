@@ -17,4 +17,4 @@ df = df.drop('sex_female', axis=1)
 
 df.rename(columns={'sex_male': 'male'}, inplace=True)
 
-df.to_csv('mummy.csv')
+df.to_csv('mummy.csv', index=False)
