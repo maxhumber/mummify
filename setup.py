@@ -30,6 +30,7 @@ setup(
     packages=['mummify'],
     install_requires=[
         'markdown',
+        'pandas'
     ],
     include_package_data=True,
     zip_safe=False
