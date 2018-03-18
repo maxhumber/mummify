@@ -8,6 +8,6 @@ setup(
     author='Max Humber',
     author_email='max.humber@gmail.com',
     license='MIT',
-    packages=['funniest'],
+    packages=['mummify'],
     zip_safe=False
 )
