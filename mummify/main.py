@@ -4,11 +4,13 @@ import re
 import subprocess
 from subprocess import CalledProcessError
 
+
 def _bash(command, mode='', capture=False):
     if capture:
         return subprocess.check_output([command + mode], shell=True)
     else:
         subprocess.call([command + mode], shell=True)
+
 
 class Mummify:
 
@@ -43,8 +45,7 @@ class Mummify:
         _bash(f'git merge {self.BRANCH}', self.MODE)
         _bash(f'git branch -d {self.BRANCH}', self.MODE)
 
-# TODO: need to make this work
-# identifier = 1234
+
 def find(identifier):
     log_item = _bash(f'git log --all --grep={identifier}', capture=True)
     log_item = log_item.decode('utf-8')
@@ -54,6 +55,6 @@ def find(identifier):
 def rewind(identifier):
     commit = find(identifier)
     _bash('git add mummify.log')
-    _bash('git commit -m "mummify save log"')
-    _bash(f'git reset --soft {commit}')
-    _bash('git reset HEAD~')
+    _bash('git commit -m "mummify save log" --quiet')
+    _bash(f'git reset --soft {commit} --quiet')
+    _bash('git reset HEAD~ --quiet')
