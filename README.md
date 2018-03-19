@@ -1,1 +1,1 @@
-# mummify
+![](logo/mummify.png)
