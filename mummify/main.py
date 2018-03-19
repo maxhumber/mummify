@@ -6,7 +6,7 @@ from subprocess import CalledProcessError
 class Mummify:
 
     def __init__(self):
-        self.BRANCH = 'mummify-' + str(uuid.uuid4())
+        self.BRANCH = 'mummify-' + str(uuid.uuid4().hex)[:8]
         self.logger = logging.getLogger(self.BRANCH)
         logging.basicConfig(
             filename='mummify.log',
@@ -22,8 +22,10 @@ class Mummify:
             subprocess.call(['git commit -m "initial commit"'], shell=True)
             subprocess.call([f'git checkout -b {self.BRANCH}'], shell=True)
 
-    def log(self, message):
+    def log(self, message, commit=False):
         self.logger.info(message)
+        if commit:
+            self.commit()
 
     def commit(self):
         subprocess.call([f'git add .'], shell=True)
@@ -31,3 +33,11 @@ class Mummify:
         subprocess.call([f'git checkout master'], shell=True)
         subprocess.call([f'git merge {self.BRANCH}'], shell=True)
         subprocess.call([f'git branch -d {self.BRANCH}'], shell=True)
+
+# TODO: need to make this work
+def find(identifier):
+    x = subprocess.check_output([f'git log --all --grep={identifier}'], shell=True)
+    print(x.decode('utf-8'))
+
+def test():
+    print('Yay!')

@@ -9,7 +9,7 @@ def readme():
 
 setup(
     name='mummify',
-    version='0.0.1',
+    version='0.0.2',
     description='Automatic ML Logging',
     long_description=readme(),
     classifiers=[
@@ -30,8 +30,12 @@ setup(
     packages=['mummify'],
     install_requires=[
         'markdown',
-        'pandas'
+        'pandas',
+        'fire'
     ],
+    entry_points = {
+        'console_scripts': ['mummify=mummify.cli:main']
+    },
     include_package_data=True,
     zip_safe=False
 )
