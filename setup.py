@@ -9,7 +9,7 @@ def readme():
 
 setup(
     name='mummify',
-    version='0.0.2',
+    version='0.0.3',
     description='Automatic ML Logging',
     long_description=readme(),
     classifiers=[
@@ -34,7 +34,7 @@ setup(
         'fire'
     ],
     entry_points = {
-        'console_scripts': ['mummify=mummify.cli:main']
+        'console_scripts': ['mummify=mummify.cli:cli']
     },
     include_package_data=True,
     zip_safe=False
