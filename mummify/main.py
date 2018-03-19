@@ -38,6 +38,3 @@ class Mummify:
 def find(identifier):
     x = subprocess.check_output([f'git log --all --grep={identifier}'], shell=True)
     print(x.decode('utf-8'))
-
-def test():
-    print('Yay!')
