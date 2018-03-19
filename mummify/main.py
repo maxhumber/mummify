@@ -49,6 +49,11 @@ def find(identifier):
     log_item = _bash(f'git log --all --grep={identifier}', capture=True)
     log_item = log_item.decode('utf-8')
     commit = re.findall('(?<=commit\s)(.*?)(?=\n)',log_item)[0]
-    print(commit)
+    return commit
 
-#
+def rewind(identifier):
+    commit = find(identifier)
+    _bash('git add mummify.log')
+    _bash('git commit -m "mummify save log"')
+    _bash(f'git reset --soft {commit}')
+    _bash('git reset HEAD~')

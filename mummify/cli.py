@@ -3,5 +3,6 @@ from fire import Fire
 
 def cli():
     Fire({
-        'find': mummify.find
+        'find': mummify.find,
+        'rewind': mummify.rewind
     })
