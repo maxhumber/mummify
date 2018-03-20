@@ -1,2 +1,1 @@
-from .main import *
-from .datasets import *
+from .main import log, switch

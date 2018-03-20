@@ -3,5 +3,5 @@ from fire import Fire
 
 def cli():
     Fire({
-        'rewind': mummify.rewind
+        'switch': mummify.switch
     })

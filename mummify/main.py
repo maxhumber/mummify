@@ -1,60 +1,53 @@
+import os
 import logging
 import uuid
 import re
-import subprocess
-from subprocess import CalledProcessError
+from subprocess import call, check_output, CalledProcessError
 
 LOGFILE = 'mummify.log'
 
-def _bash(command, capture=False):
-    if capture:
-        return subprocess.check_output([command], shell=True)
+def _execute(command, output=False):
+    if output:
+        return check_output([command], shell=True).decode('utf-8').strip()
     else:
-        subprocess.call([command], shell=True)
+        call([command], shell=True)
 
-
-class Mummify:
-
-    def __init__(self, message):
-        self.message = message
-        self.BRANCH = 'mummify-' + str(uuid.uuid4().hex)[:8]
-        self.logger = logging.getLogger(self.BRANCH)
-        logging.basicConfig(
-            filename=LOGFILE,
-            level=logging.INFO,
-            style='{',
-            format='{name}|{message}'
-        )
-        try:
-            _bash(f'git checkout -b {self.BRANCH} --quiet', capture=True)
-        # instantiate git if not present
-        except CalledProcessError:
-            _bash('git init --quiet')
-            _bash('git add .')
-            _bash('git commit -m "{self.BRANCH}" --quiet')
-        self.log(message)
-
-    def log(self, message):
-        self.logger.info(message)
-        self._commit()
-
-    def _commit(self):
-        _bash(f'git add .')
-        _bash(f'git commit -m {self.BRANCH} --quiet')
-        _bash(f'git checkout master --quiet')
-        _bash(f'git merge {self.BRANCH} --quiet')
-        _bash(f'git branch -d {self.BRANCH} --quiet')
-
-
-def _find(identifier):
-    log_item = _bash(f'git log --all --grep={identifier}', capture=True)
-    log_item = log_item.decode('utf-8')
+def _find(id):
+    log_item = _execute(f'git log --all --grep={id}', output=True)
     commit = re.findall('(?<=commit\s)(.*?)(?=\n)',log_item)[0]
     return commit
 
-def rewind(identifier):
-    commit = _find(identifier)
-    _bash(f'git add {LOGFILE}')
-    _bash('git commit -m "mummify save log" --quiet')
-    _bash(f'git reset --soft {commit} --quiet')
-    _bash('git reset HEAD~ --quiet')
+def switch(id):
+    commit = _find(id)
+    _execute(f'git add {LOGFILE}')
+    _execute('git commit -m "mummify save log" --quiet')
+    _execute(f'git reset --soft {commit} --quiet')
+    _execute('git reset HEAD~ --quiet')
+
+def _create_branch(BRANCH):
+    try:
+        _execute(f'git checkout -b {BRANCH} --quiet', output=True)
+    except CalledProcessError:
+        _execute('git init --quiet')
+        _execute('git add .')
+        _execute(f'git commit -m "{BRANCH}" --quiet')
+
+def _commit(BRANCH):
+    _execute(f'git add .')
+    _execute(f'git commit -m {BRANCH} --quiet')
+    _execute(f'git checkout master --quiet')
+    _execute(f'git merge {BRANCH} --quiet')
+    _execute(f'git branch -d {BRANCH} --quiet')
+
+def log(message):
+    BRANCH = 'mummify-' + str(uuid.uuid4().hex)[:8]
+    logger = logging.getLogger(BRANCH)
+    logging.basicConfig(
+        filename=LOGFILE,
+        level=logging.INFO,
+        style='{',
+        format='{name}|{message}'
+    )
+    _create_branch(BRANCH)
+    logger.info(message)
+    _commit(BRANCH)
