@@ -19,10 +19,16 @@ def _find(id):
 
 def switch(id):
     commit = _find(id)
-    _execute(f'git add {LOGFILE}')
-    _execute('git commit -m "mummify save log" --quiet')
-    _execute(f'git reset --soft {commit} --quiet')
-    _execute('git reset HEAD~ --quiet')
+    _execute('git checkout -b log --quiet')
+    _execute('git checkout -b switch --quiet')
+    _execute(f'git reset --hard {commit} --quiet')
+    _execute('git merge -s ours --no-commit master --quiet')
+    _execute(f'git checkout log {LOGFILE} --quiet')
+    _execute(f'git commit -m "switch-{id}" --quiet')
+    _execute('git checkout master --quiet')
+    _execute('git merge switch --quiet')
+    _execute('git branch -D log --quiet')
+    _execute('git branch -D switch --quiet')
 
 def _create_branch(BRANCH):
     try:
@@ -30,7 +36,7 @@ def _create_branch(BRANCH):
     except CalledProcessError:
         _execute('git init --quiet')
         _execute('git add .')
-        _execute(f'git commit -m "{BRANCH}" --quiet')
+        _execute('git commit -m "mummify-start" --quiet')
 
 def _commit(BRANCH):
     _execute(f'git add .')
