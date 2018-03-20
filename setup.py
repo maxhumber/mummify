@@ -9,7 +9,7 @@ def readme():
 
 setup(
     name='mummify',
-    version='0.1.1',
+    version='0.1.2',
     description='Automatic ML Logging',
     long_description=readme(),
     classifiers=[

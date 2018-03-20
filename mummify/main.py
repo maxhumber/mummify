@@ -6,6 +6,7 @@ from subprocess import call, check_output, CalledProcessError
 
 LOGFILE = 'mummify.log'
 
+#TODO: accept a list of commands
 def _execute(command, output=False):
     if output:
         return check_output([command], shell=True).decode('utf-8').strip()
@@ -17,6 +18,8 @@ def _find(id):
     commit = re.findall('(?<=commit\s)(.*?)(?=\n)',log_item)[0]
     return commit
 
+#TODO: supress git messages
+#TODO: make this cleaner
 def switch(id):
     commit = _find(id)
     _execute('git checkout -b log --quiet')
@@ -24,12 +27,14 @@ def switch(id):
     _execute(f'git reset --hard {commit} --quiet')
     _execute('git merge -s ours --no-commit master --quiet')
     _execute(f'git checkout log {LOGFILE} --quiet')
+    #TODO: remove mummify- ?
     _execute(f'git commit -m "switch-{id}" --quiet')
     _execute('git checkout master --quiet')
     _execute('git merge switch --quiet')
     _execute('git branch -D log --quiet')
     _execute('git branch -D switch --quiet')
 
+#TODO: fix the git fatal message
 def _create_branch(BRANCH):
     try:
         _execute(f'git checkout -b {BRANCH} --quiet', output=True)
