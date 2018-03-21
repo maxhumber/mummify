@@ -26,15 +26,15 @@ def shell(command, capture_output=False, silent=True):
     return None
 
 def view():
-    '''CLI - view modified git graph'''
-    graph = shell('git log --graph --decorate --oneline', capture_output=True)
+    '''CLI - view modified git'''
+    graph = shell('git --git-dir=.mummify log --graph --decorate --oneline', capture_output=True)
     graph = re.sub('\s([a-zA-Z0-9_-]){7}\s', '  ', graph)
-    graph = re.sub(r'\(HEAD -> master\)', 'CURRENT', graph)
+    graph = re.sub(r'\(HEAD -> master\)', 'HEAD', graph)
     return '\n' + graph + '\n'
 
 def find(id):
     '''Find git commit id'''
-    log_item = shell(f'git log --all --grep={id}', capture_output=True)
+    log_item = shell(f'git --git-dir=.mummify log --all --grep={id}', capture_output=True)
     commit = re.findall('(?<=commit\s)(.*?)(?=\n)',log_item)[0]
     return commit
 
@@ -42,43 +42,47 @@ def switch(id):
     '''CLI - switch to mummify commit'''
     commit = find(id)
     shell([
-        'git checkout -b logger',
-        'git checkout -b switch',
-        f'git reset --hard {commit}',
-        'git merge -s ours --no-commit master',
-        f'git checkout log {LOGFILE}',
-        f'git commit -m "switch-{id}"',
-        'git checkout master',
-        'git merge switch',
-        'git branch -D logger',
-        'git branch -D switch'
+        'git --git-dir=.mummify checkout -b logger',
+        'git --git-dir=.mummify checkout -b switch',
+        f'git --git-dir=.mummify reset --hard {commit}',
+        'git --git-dir=.mummify merge -s ours --no-commit master',
+        f'git --git-dir=.mummify checkout log {LOGFILE}',
+        f'git --git-dir=.mummify commit -m "switch-{id}"',
+        'git --git-dir=.mummify checkout master',
+        'git --git-dir=.mummify merge switch',
+        'git --git-dir=.mummify branch -D logger',
+        'git --git-dir=.mummify branch -D switch'
     ])
 
 def create_branch(BRANCH):
     '''Create new mummify branch'''
     git = (
         subprocess.Popen(
-            'git status >/dev/null 2>&1 && echo True',
+            'git --git-dir=.mummify status >/dev/null 2>&1 && echo True',
             shell=True,
             stdout=subprocess.PIPE
         ).communicate()[0].decode('utf-8').strip())
     if git:
-        shell(f'git checkout -b {BRANCH}')
+        shell(f'git --git-dir=.mummify checkout -b {BRANCH}')
     else:
         shell([
-            'git init',
-            'git add .',
-            'git commit -m "mummify-start"'
+            'git init .',
+            'mv .git .mummify'
+        ])
+        shell("echo '.mummify' >> .gitignore", silent=False)
+        shell([
+            'git --git-dir=.mummify add .',
+            'git --git-dir=.mummify commit -m "mummify-start"'
         ])
 
 def commit(BRANCH):
     '''Commit run to mummify'''
     shell([
-        'git add .',
-        f'git commit -m {BRANCH} --quiet',
-        'git checkout master --quiet',
-        f'git merge {BRANCH} --quiet',
-        f'git branch -d {BRANCH} --quiet'
+        'git --git-dir=.mummify add .',
+        f'git --git-dir=.mummify commit -m {BRANCH} --quiet',
+        'git --git-dir=.mummify checkout master --quiet',
+        f'git --git-dir=.mummify merge {BRANCH} --quiet',
+        f'git --git-dir=.mummify branch -d {BRANCH} --quiet'
     ])
 
 def log(message):
