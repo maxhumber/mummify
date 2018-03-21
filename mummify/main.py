@@ -18,6 +18,12 @@ def _find(id):
     commit = re.findall('(?<=commit\s)(.*?)(?=\n)',log_item)[0]
     return commit
 
+def view():
+    graph = _execute('git log --graph --decorate --oneline', output=True)
+    graph = re.sub('\s([a-zA-Z0-9_-]){7}\s', '  ', graph)
+    graph = re.sub(r'\(HEAD -> master\)', 'CURRENT', graph)
+    return '\n' + graph + '\n'
+
 #TODO: supress git messages
 #TODO: make this cleaner
 def switch(id):

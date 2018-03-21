@@ -23,4 +23,4 @@ Run `python model.py` and watch the magic happen!
 ---
 
 From the command line: `mummify switch <id>`
-Will revert to that commit
+Will revert to that commit.

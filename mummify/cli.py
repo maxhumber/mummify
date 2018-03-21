@@ -4,5 +4,6 @@ from fire import Fire
 #TODO: remove fire depends? no depends possible?
 def cli():
     Fire({
-        'switch': mummify.switch
+        'switch': mummify.switch,
+        'view': mummify.view
     })

@@ -1,1 +1,1 @@
-from .main import log, switch
+from .main import log, switch, view
