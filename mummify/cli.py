@@ -5,5 +5,5 @@ from fire import Fire
 def cli():
     Fire({
         'switch': mummify.switch,
-        'view': mummify.view
+        'history': mummify.history
     })

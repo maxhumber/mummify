@@ -25,7 +25,7 @@ def shell(command, capture_output=False, silent=True):
     [subprocess.call([c], shell=True) for c in command]
     return None
 
-def view():
+def history():
     '''CLI - view modified git'''
     graph = shell('git --git-dir=.mummify log --graph --decorate --oneline', capture_output=True)
     graph = re.sub('\s([a-zA-Z0-9_-]){7}\s', '  ', graph)
