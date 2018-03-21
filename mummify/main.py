@@ -43,15 +43,15 @@ def switch(id):
     commit = find(id)
     shell([
         'git --git-dir=.mummify checkout -b logger',
-        'git --git-dir=.mummify checkout -b switch',
+        'git --git-dir=.mummify checkout -b switcher',
         f'git --git-dir=.mummify reset --hard {commit}',
         'git --git-dir=.mummify merge -s ours --no-commit master',
-        f'git --git-dir=.mummify checkout log {LOGFILE}',
+        f'git --git-dir=.mummify checkout logger {LOGFILE}',
         f'git --git-dir=.mummify commit -m "switch-{id}"',
         'git --git-dir=.mummify checkout master',
-        'git --git-dir=.mummify merge switch',
+        'git --git-dir=.mummify merge switcher',
         'git --git-dir=.mummify branch -D logger',
-        'git --git-dir=.mummify branch -D switch'
+        'git --git-dir=.mummify branch -D switcher'
     ])
 
 def create_branch(BRANCH):
@@ -93,7 +93,7 @@ def log(message):
         filename=LOGFILE,
         level=logging.INFO,
         style='{',
-        format='{name}|{message}'
+        format='[{name}] {message}'
     )
     create_branch(BRANCH)
     logger.info(message)
