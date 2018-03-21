@@ -34,7 +34,10 @@ fake_change(file, '0.750', '0.767')
 history = subprocess.check_output(['mummify history'], shell=True).decode('utf-8').strip()
 mummify_id = re.search('(?<=\n\*\s\s)(.*)(?=\n\*\s\smummify-start)', history).group(0)
 
+subprocess.call([f'mummify switch {mummify_id}'], shell=True)
 
 def tear_down():
     subprocess.call(['rm .git .gitignore model.py mummify.log'], shell=True)
     subprocess.call(['rm -rf .mummify'], shell=True)
+
+tear_down()
