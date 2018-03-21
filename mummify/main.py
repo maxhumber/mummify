@@ -23,18 +23,19 @@ def shell(command, capture_output=False, silent=True):
     if silent:
         command = [c + ' &>/dev/null' for c in command]
     [subprocess.call([c], shell=True) for c in command]
-    return None
 
 def history():
     '''CLI - view modified git'''
-    graph = shell('git --git-dir=.mummify log --graph --decorate --oneline', capture_output=True)
+    graph = shell('git --git-dir=.mummify log --graph --decorate --oneline',
+        capture_output=True)
     graph = re.sub('\s([a-zA-Z0-9_-]){7}\s', '  ', graph)
     graph = re.sub(r'\(HEAD -> master\)', 'HEAD', graph)
     return '\n' + graph + '\n'
 
 def find(id):
     '''Find git commit id'''
-    log_item = shell(f'git --git-dir=.mummify log --all --grep={id}', capture_output=True)
+    log_item = shell(f'git --git-dir=.mummify log --all --grep={id}',
+        capture_output=True)
     commit = re.findall('(?<=commit\s)(.*?)(?=\n)',log_item)[0]
     return commit
 
@@ -65,10 +66,7 @@ def create_branch(BRANCH):
     if git:
         shell(f'git --git-dir=.mummify checkout -b {BRANCH}')
     else:
-        shell([
-            'git init .',
-            'mv .git .mummify'
-        ])
+        shell('git init --separate-git-dir .mummify')
         shell("echo '.mummify' >> .gitignore", silent=False)
         shell([
             'git --git-dir=.mummify add .',
@@ -85,8 +83,18 @@ def commit(BRANCH):
         f'git --git-dir=.mummify branch -d {BRANCH} --quiet'
     ])
 
+def check_status():
+    git_status = subprocess.Popen(
+        "git --git-dir=.mummify status | grep 'nothing to commit'",
+        shell=True,
+        stdout=subprocess.PIPE
+    ).communicate()[0].decode('utf-8').strip()
+    return git_status
+
 def log(message):
     '''Main interface'''
+    if check_status() == 'nothing to commit, working tree clean':
+        return
     BRANCH = 'mummify-' + str(uuid.uuid4().hex)[:8]
     logger = logging.getLogger(BRANCH)
     logging.basicConfig(

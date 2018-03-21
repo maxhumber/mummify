@@ -9,11 +9,11 @@ def readme():
 
 setup(
     name='mummify',
-    version='0.1.2',
+    version='0.2.0',
     description='Automatic ML Logging',
     long_description=readme(),
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
