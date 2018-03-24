@@ -72,6 +72,7 @@ def create_branch(BRANCH):
             'git --git-dir=.mummify add .',
             'git --git-dir=.mummify commit -m "mummify-start"'
         ])
+        print('Mummify Initialized!')
 
 def commit(BRANCH):
     '''Commit run to mummify'''
@@ -105,4 +106,5 @@ def log(message):
     )
     create_branch(BRANCH)
     logger.info(message)
+    print(message)
     commit(BRANCH)
