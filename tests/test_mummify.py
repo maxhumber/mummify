@@ -76,12 +76,20 @@ def test_mummify_history():
     assert history.count('*') == 5
 
 
+def tear_down_mummify():
+    subprocess.call([f'rm .git .gitignore mummify.log {file}'], shell=True)
+    subprocess.call(['rm -rf .mummify'], shell=True)
+    return None
+
 test_first_mummify_log()
 test_first_change()
 test_multiple_changes()
 test_mummify_history()
 tear_down_mummify()
 
+#
+# if git:
+#     print('Hi')
 
 # history = subprocess.check_output(['mummify history'], shell=True).decode('utf-8').strip()
 # print(history)
@@ -93,9 +101,6 @@ tear_down_mummify()
 #
 # subprocess.call([f'mummify switch {mummify_id}'], shell=True)
 #
-# def tear_down_mummify():
-#     subprocess.call([f'rm .git .gitignore mummify.log {file}'], shell=True)
-#     subprocess.call(['rm -rf .mummify'], shell=True)
-#     return None
+
 #
 # tear_down_mummify()

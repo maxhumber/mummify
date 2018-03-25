@@ -3,6 +3,7 @@ import uuid
 import re
 import subprocess
 from ast import literal_eval
+from pathlib import Path
 
 LOGFILE = 'mummify.log'
 
@@ -55,24 +56,20 @@ def switch(id):
         'git --git-dir=.mummify branch -D switcher'
     ])
 
+def init_mummify():
+    '''Initialized mummify if not exists'''
+    shell('git init --separate-git-dir .mummify')
+    shell("echo '.mummify' >> .gitignore", silent=False)
+    shell([
+        'git --git-dir=.mummify add .',
+        'git --git-dir=.mummify commit -m "mummify-start"'
+    ])
+    print('mummify successfully initialized!')
+    return None
+
 def create_branch(BRANCH):
     '''Create new mummify branch'''
-    git = (
-        subprocess.Popen(
-            'git --git-dir=.mummify status >/dev/null 2>&1 && echo True',
-            shell=True,
-            stdout=subprocess.PIPE
-        ).communicate()[0].decode('utf-8').strip())
-    if git:
-        shell(f'git --git-dir=.mummify checkout -b {BRANCH}')
-    else:
-        shell('git init --separate-git-dir .mummify')
-        shell("echo '.mummify' >> .gitignore", silent=False)
-        shell([
-            'git --git-dir=.mummify add .',
-            'git --git-dir=.mummify commit -m "mummify-start"'
-        ])
-        print('Mummify Initialized!')
+    shell(f'git --git-dir=.mummify checkout -b {BRANCH}')
 
 def commit(BRANCH):
     '''Commit run to mummify'''
@@ -92,18 +89,24 @@ def check_status():
     ).communicate()[0].decode('utf-8').strip()
     return git_status
 
+#TODO: Refactor
 def log(message):
     '''Main interface'''
-    if check_status() == 'nothing to commit, working tree clean':
-        return
-    BRANCH = 'mummify-' + str(uuid.uuid4().hex)[:8]
-    logger = logging.getLogger(BRANCH)
     logging.basicConfig(
         filename=LOGFILE,
         level=logging.INFO,
         style='{',
         format='[{name}] {message}'
     )
+    BRANCH = 'mummify-' + str(uuid.uuid4().hex)[:8]
+    logger = logging.getLogger(BRANCH)
+    if not Path('.mummify').is_dir():
+        init_mummify()
+        logger.info(message)
+        commit(BRANCH)
+        return
+    if check_status() == 'nothing to commit, working tree clean':
+        return
     create_branch(BRANCH)
     logger.info(message)
     print(message)
