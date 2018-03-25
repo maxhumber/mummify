@@ -9,8 +9,8 @@ def readme():
 
 setup(
     name='mummify',
-    version='0.2.0',
-    description='Automatic ML Logging',
+    version='0.3.0',
+    description='Git + Logging for ML',
     long_description=readme(),
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -29,8 +29,7 @@ setup(
     license='MIT',
     packages=['mummify'],
     install_requires=[
-        'markdown',
-        'fire'
+        'markdown'
     ],
     entry_points = {
         'console_scripts': ['mummify=mummify.cli:cli']

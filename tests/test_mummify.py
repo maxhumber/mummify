@@ -87,6 +87,9 @@ test_multiple_changes()
 test_mummify_history()
 tear_down_mummify()
 
+# import mummify
+# mummify.history()
+
 #
 # if git:
 #     print('Hi')
