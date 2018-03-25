@@ -26,6 +26,7 @@ def shell(command, capture_output=False, silent=True):
     [subprocess.call([c], shell=True) for c in command]
 
 def colour(string):
+    '''Paint it purple!'''
     print('\033[35m' + string + '\033[0m')
 
 def history():
@@ -68,7 +69,6 @@ def init_mummify():
         'git --git-dir=.mummify commit -m "mummify-start"'
     ])
     colour('mummify successfully initialized!')
-    # print('\033[35m' + 'mummify successfully initialized!' + '\033[0m') # purple
     return None
 
 def create_branch(BRANCH):
@@ -115,5 +115,4 @@ def log(message):
     create_branch(BRANCH)
     logger.info(message)
     colour(message)
-    # print('\033[35m' + message + '\033[0m') # purple
     commit(BRANCH)
