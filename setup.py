@@ -12,6 +12,7 @@ setup(
     version='0.3.0',
     description='Git + Logging for ML',
     long_description=readme(),
+    long_description_content_type='text/markdown',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
@@ -28,11 +29,9 @@ setup(
     author_email='max.humber@gmail.com',
     license='MIT',
     packages=['mummify'],
-    install_requires=[
-        'markdown'
-    ],
     entry_points = {
         'console_scripts': ['mummify=mummify.cli:cli']
     },
-    zip_safe=False
+    zip_safe=False,
+    python_requires='>=3.6'
 )
