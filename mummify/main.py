@@ -25,8 +25,11 @@ def shell(command, capture_output=False, silent=True):
         command = [c + ' &>/dev/null' for c in command]
     [subprocess.call([c], shell=True) for c in command]
 
+def colour(string):
+    print('\033[35m' + string + '\033[0m')
+
 def history():
-    '''CLI - view modified git'''
+    '''View modified git graph (CLI)'''
     graph = shell('git --git-dir=.mummify log --graph --decorate --oneline',
         capture_output=True)
     graph = re.sub('\s([a-zA-Z0-9_-]){7}\s', '  ', graph)
@@ -34,14 +37,14 @@ def history():
     return '\n' + graph + '\n'
 
 def find(id):
-    '''Find git commit id'''
+    '''Find git commit based on mummify id'''
     log_item = shell(f'git --git-dir=.mummify log --all --grep={id}',
         capture_output=True)
     commit = re.findall('(?<=commit\s)(.*?)(?=\n)',log_item)[0]
     return commit
 
 def switch(id):
-    '''CLI - switch to mummify commit'''
+    '''Switch to a specific mummify commit (CLI)'''
     commit = find(id)
     shell([
         'git --git-dir=.mummify checkout -b logger',
@@ -57,14 +60,15 @@ def switch(id):
     ])
 
 def init_mummify():
-    '''Initialized mummify if not exists'''
+    '''Initialize mummify if not exists'''
     shell('git init --separate-git-dir .mummify')
     shell("echo '.mummify' >> .gitignore", silent=False)
     shell([
         'git --git-dir=.mummify add .',
         'git --git-dir=.mummify commit -m "mummify-start"'
     ])
-    print('mummify successfully initialized!')
+    colour('mummify successfully initialized!')
+    # print('\033[35m' + 'mummify successfully initialized!' + '\033[0m') # purple
     return None
 
 def create_branch(BRANCH):
@@ -72,7 +76,7 @@ def create_branch(BRANCH):
     shell(f'git --git-dir=.mummify checkout -b {BRANCH}')
 
 def commit(BRANCH):
-    '''Commit run to mummify'''
+    '''Commit run to .mummify'''
     shell([
         'git --git-dir=.mummify add .',
         f'git --git-dir=.mummify commit -m {BRANCH} --quiet',
@@ -82,6 +86,7 @@ def commit(BRANCH):
     ])
 
 def check_status():
+    '''Check mummify git status'''
     git_status = subprocess.Popen(
         "git --git-dir=.mummify status | grep 'nothing to commit'",
         shell=True,
@@ -89,9 +94,8 @@ def check_status():
     ).communicate()[0].decode('utf-8').strip()
     return git_status
 
-#TODO: Refactor
 def log(message):
-    '''Main interface'''
+    '''Main application interface'''
     logging.basicConfig(
         filename=LOGFILE,
         level=logging.INFO,
@@ -106,8 +110,10 @@ def log(message):
         commit(BRANCH)
         return
     if check_status() == 'nothing to commit, working tree clean':
+        colour('Nothing changed, nothing logged')
         return
     create_branch(BRANCH)
     logger.info(message)
-    print(message)
+    colour(message)
+    # print('\033[35m' + message + '\033[0m') # purple
     commit(BRANCH)
