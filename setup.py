@@ -3,22 +3,20 @@
 
 from setuptools import setup
 
-def readme():
-    with open('README.md') as f:
-        return f.read()
+with open('README.md') as f:
+    long_description = f.read()
 
 setup(
     name='mummify',
-    version='0.3.0',
+    version='0.3.3',
     description='Git + Logging for ML',
-    long_description=readme(),
-    long_description_content_type='text/markdown',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Version Control',
@@ -33,5 +31,6 @@ setup(
         'console_scripts': ['mummify=mummify.cli:cli']
     },
     zip_safe=False,
-    python_requires='>=3.6'
+    python_requires='>=3.6',
+    setup_requires=['setuptools>=38.6.0']
 )

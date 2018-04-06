@@ -1,16 +1,10 @@
 # mummify
 
----
-
-![](images/mummify.png)
-
----
+![](https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify.png)
 
 ## Install
 
 `pip install mummify`
-
----
 
 ## About
 
@@ -25,8 +19,6 @@ mummify comes packaged with three main functions:
 - `log` to automatically log and commit
 - `history` to view the commit graph tree
 - `switch` to switch to a different commit
-
----
 
 ## Quick Start
 
@@ -53,7 +45,7 @@ mummify.log(f'Test accuracy: {accuracy:.3f}')
 
 When you call `python model.py` from the command line mummify will initialize a specialized `.mummify` git directory, create a `mummify.log` file, and keep track of model performance:
 
-![](images/mummify-init.png)
+![](https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify-init.png)
 
 Whenever you make a change to your model, think: swap in a new algorithm:
 
@@ -78,7 +70,7 @@ mummify.log(f'Test accuracy: {accuracy:.3f}')
 
 And re-run `python model.py` mummify will update the `mummify.log` file and save the state of your model:
 
-![](images/mummify-first-change.png)
+![](https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify-first-change.png)
 
 To view the mummify log history from the command line you can run `mummify history`:
 
@@ -94,6 +86,6 @@ max-mbp:quick-start max$
 
 And to rewind history (go back to a previous state), just grab the mummify identifier that you want to switch to from the `mummify.log` file and run `mummify switch <id>` from the command line:
 
-![](images/mummify-switch.png)
+![](https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify-switch.png)
 
 mummify will preserve all state history on a switch and keep the `mummify.log` file immutable.
