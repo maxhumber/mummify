@@ -4,3 +4,5 @@ __pycache__
 dist/
 DS_Store
 build/
+bld.bat
+build.sh

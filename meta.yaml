@@ -1,0 +1,59 @@
+{% set name = "mummify" %}
+{% set version = "0.3.3" %}
+{% set file_ext = "tar.gz" %}
+{% set hash_type = "sha256" %}
+{% set hash_value = "4f3f08007117ddb28aee2e44f1181753dd44c2bf1a6b03444ccd429fc261e725" %}
+
+package:
+  name: '{{ name|lower }}'
+  version: '{{ version }}'
+
+source:
+  fn: '{{ name }}-{{ version }}.{{ file_ext }}'
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ file_ext }}
+  '{{ hash_type }}': '{{ hash_value }}'
+
+build:
+  number: 0
+  entry_points:
+    - mummify=mummify.cli:cli
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  host:
+    - python
+    - setuptools
+  run:
+    - python
+
+test:
+  imports:
+    - mummify
+  commands:
+    - mummify --help
+
+about:
+  home: https://github.com/maxhumber/mummify
+  license: MIT License
+  license_family: MIT
+  license_file: ''
+  summary: Git + Logging for ML
+  description: "# mummify\n\n![](https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify.png)\n\n## Install\n\n`pip install mummify`\n\n## About\n\n*\"You suck at Git. And logging. But\
+    \ it's not your fault.\"*\n\nmummify is git+logging for people who do machine learning.\n\nmummify is simple, opinionated, and built directly on top of git.\n\nmummify comes packaged with three main\
+    \ functions:\n\n- `log` to automatically log and commit\n- `history` to view the commit graph tree\n- `switch` to switch to a different commit\n\n## Quick Start\n\nImport `mummify` at the top of your\
+    \ machine learning script (in this case, `model.py`) and add `mummify.log(<message>)` at the very end of your script:\n\n```\nimport mummify\nfrom sklearn.datasets import load_wine\nfrom sklearn.model_selection\
+    \ import train_test_split\nfrom sklearn.neighbors import KNeighborsClassifier\n\ndata = load_wine()\ny = data.target\nX = data.data\n\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y,\
+    \ test_size=0.2, random_state=42)\n\nmodel = KNeighborsClassifier()\nmodel.fit(X_train, y_train)\naccuracy = model.score(X_test, y_test)\nmummify.log(f'Test accuracy: {accuracy:.3f}')\n```\n\nWhen you\
+    \ call `python model.py` from the command line mummify will initialize a specialized `.mummify` git directory, create a `mummify.log` file, and keep track of model performance:\n\n![](https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify-init.png)\n\
+    \nWhenever you make a change to your model, think: swap in a new algorithm:\n\n```\nimport mummify\nfrom sklearn.datasets import load_wine\nfrom sklearn.model_selection import train_test_split\nfrom\
+    \ sklearn.linear_model import LogisticRegression\n\ndata = load_wine()\ny = data.target\nX = data.data\n\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42)\n\
+    \nmodel = LogisticRegression()\nmodel.fit(X_train, y_train)\naccuracy = model.score(X_test, y_test)\nmummify.log(f'Test accuracy: {accuracy:.3f}')\n```\n\nAnd re-run `python model.py` mummify will update\
+    \ the `mummify.log` file and save the state of your model:\n\n![](https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify-first-change.png)\n\nTo view the mummify log history from\
+    \ the command line you can run `mummify history`:\n\n```\nmax-mbp:quick-start max$ mummify history\n\n*  HEAD mummify-f0e66a82\n*  mummify-75dea5e9\n*  mummify-start\n\nmax-mbp:quick-start max$\n```\n\
+    \nAnd to rewind history (go back to a previous state), just grab the mummify identifier that you want to switch to from the `mummify.log` file and run `mummify switch <id>` from the command line:\n\n\
+    ![](https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify-switch.png)\n\nmummify will preserve all state history on a switch and keep the `mummify.log` file immutable."
+  doc_url: ''
+  dev_url: ''
+
+extra:
+  recipe-maintainers: ''
