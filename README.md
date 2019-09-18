@@ -1,28 +1,28 @@
-# mummify
+<h3 align="center">
+  <img src="https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify.png" width="200px" alt="chart">
+</h3>
+<p align="center">
+  <a href="https://opensource.org/licenses/MIT"><img alt="MIT" src="https://img.shields.io/github/license/maxhumber/mummify.svg"></a>
+  <a href="https://travis-ci.org/maxhumber/mummify"><img alt="Travis" src="https://img.shields.io/travis/maxhumber/mummify.svg"></a>
+  <a href="https://pypi.python.org/pypi/mummify"><img alt="PyPI" src="https://img.shields.io/pypi/v/mummify.svg"></a>
+  <a href="https://pypi.python.org/pypi/mummify"><img alt="Downloads" src="https://img.shields.io/pypi/dm/mummify.svg"></a>
+</p>
 
-![](https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify.png)
+#### About
 
-## Install
+mummify makes model prototyping faster. The package manages git and performance logging for your machine learning project so that you can focus on what's important...
 
-`pip install mummify`
+#### Functions
 
-## About
+mummify is composed of just three simple functions:
 
-*"You suck at Git. And logging. But it's not your fault."*
+- `log` - to automatically log and commit model changes
+- `history` - to view model changes over time
+- `switch` - to switch back to an earlier version of your model
 
-mummify is git+logging for people who do machine learning.
+#### Usage
 
-mummify is simple, opinionated, and built directly on top of git.
-
-mummify comes packaged with three main functions:
-
-- `log` to automatically log and commit
-- `history` to view the commit graph tree
-- `switch` to switch to a different commit
-
-## Quick Start
-
-Import `mummify` at the top of your machine learning script (in this case, `model.py`) and add `mummify.log(<message>)` at the very end of your script:
+Import `mummify` at the top of your script (in this case, `model.py`) and add `mummify.log(<message>)` at the very end:
 
 ```
 import mummify
@@ -43,11 +43,11 @@ accuracy = model.score(X_test, y_test)
 mummify.log(f'Test accuracy: {accuracy:.3f}')
 ```
 
-When you call `python model.py` from the command line mummify will initialize a specialized `.mummify` git directory, create a `mummify.log` file, and keep track of model performance:
+When you call `python model.py` from the command line, mummify will initialize a protected `.mummify` git directory, create a `mummify.log` file, and automtically keep track of model performance:
 
 ![](https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify-init.png)
 
-Whenever you make a change to your model, think: swap in a new algorithm:
+Whenever you make a change to your model (try a different algorithm)...
 
 ```
 import mummify
@@ -68,11 +68,11 @@ accuracy = model.score(X_test, y_test)
 mummify.log(f'Test accuracy: {accuracy:.3f}')
 ```
 
-And re-run `python model.py` mummify will update the `mummify.log` file and save the state of your model:
+...and re-run `python model.py` mummify will update the `mummify.log` file and save the state of your model:
 
 ![](https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify-first-change.png)
 
-To view the mummify log history from the command line you can run `mummify history`:
+To view the history of your model, just run  `mummify history` from the command line:
 
 ```
 max-mbp:quick-start max$ mummify history
@@ -84,8 +84,18 @@ max-mbp:quick-start max$ mummify history
 max-mbp:quick-start max$
 ```
 
-And to rewind history (go back to a previous state), just grab the mummify identifier that you want to switch to from the `mummify.log` file and run `mummify switch <id>` from the command line:
+And to rewind or jump back to a previous state, just grab the mummify identifier that you would like switch to from the `mummify.log` file and run `mummify switch <id>` from the command line:
 
 ![](https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify-switch.png)
 
-mummify will preserve all state history on a switch and keep the `mummify.log` file immutable.
+mummify will preserve all state history during and after a switch and keep the `mummify.log` file immutable.
+
+#### Installation
+
+```
+pip install mummify
+```
+
+#### Contribute
+
+For feature requests or bug reports, please use [Github Issues](https://github.com/maxhumber/chart/issues)
