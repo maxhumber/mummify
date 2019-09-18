@@ -6,14 +6,14 @@ import subprocess
 import mummify
 
 def setup_mummify():
-    subprocess.check_call(["echo 'test_mummify.py' >> .gitignore"], shell=True)
+    subprocess.run(["echo 'test_mummify.py' >> .gitignore"], shell=True)
     contents = '''import mummify
 accuracy = 0.80
 mummify.log(f'Accruacy: {accuracy:.3f}')
 '''
     with open('model.py', 'w+') as f:
         f.write(contents)
-    subprocess.check_call(['python model.py'], shell=True)
+    subprocess.run(['python model.py'], shell=True)
 
 def check_status():
     git_status = subprocess.Popen(
@@ -50,9 +50,6 @@ def tear_down_mummify():
 def test_mummify():
     os.chdir('tests')
     setup_mummify()
-    # print(subprocess.check_output(['git --version'], shell=True).decode('utf-8'))
-    # print(subprocess.check_output(['pwd'], shell=True).decode('utf-8'))
-    # print(subprocess.check_output(['ls'], shell=True).decode('utf-8'))
     assert check_status() == 'nothing to commit, working tree clean'
     assert check_log_line_count() == 1
     simulate_change(0.75)
