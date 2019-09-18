@@ -1,109 +1,73 @@
-import subprocess
-import re
-from ast import literal_eval
+import os
 from pathlib import Path
+import re
+import subprocess
 
-file = 'model.py'
-contents = '''import mummify
-test_accuracy = 0.80
-mummify.log(f'Test: {test_accuracy:.3f}')
-'''
+import mummify
 
 def setup_mummify():
     subprocess.call(["echo 'test_mummify.py' >> .gitignore"], shell=True)
-    with open(file, 'w+') as f:
+    contents = '''
+import mummify
+accuracy = 0.80
+mummify.log(f'Accruacy: {accuracy:.3f}')
+'''
+    with open('model.py', 'w+') as f:
         f.write(contents)
     subprocess.call(['python model.py &>/dev/null'], shell=True)
-    return None
 
 def check_status():
     git_status = subprocess.Popen(
-            "git --git-dir=.mummify status | grep 'nothing to commit'",
-            shell=True,
-            stdout=subprocess.PIPE
-        ).communicate()[0].decode('utf-8').strip()
+        "git --git-dir=.mummify status | grep 'nothing to commit'",
+        shell=True,
+        stdout=subprocess.PIPE
+    ).communicate()[0].decode('utf-8').strip()
     return git_status
 
 def check_log_line_count():
     return int(subprocess.check_output('wc -l mummify.log', shell=True).split()[0])
 
-def fake_change(file, new):
-    with open(file, "r+") as f:
+def simulate_change(new):
+    with open('model.py', "r+") as f:
         contents = f.read()
-        contents = re.sub('(?<=\=\s)(.*?)(?=\n)', f'{new}', contents)
+        contents = re.sub(r'(?<=\=\s)(.*?)(?=\n)', f'{new}', contents)
         f.seek(0)
         f.write(contents)
         f.truncate()
-    return None
-
-def test_first_mummify_log():
-    setup_mummify()
-    errors = []
-    if not Path('.mummify').is_dir():
-        errors.append('.mummify wasn\'t properly initialized')
-    if not check_status() == 'nothing to commit, working tree clean':
-        errors.append('mummify didn\'t properly commit everything')
-    if not check_log_line_count() == 1:
-        errors.append('mummify didn\'t properly log')
-    assert not errors, 'errors occured:\n{}'.format('\n'.join(errors))
-
-def test_first_change():
-    fake_change(file, 0.83)
-    errors = []
-    if not check_status() == '':
-        errors.append('change wasn\'t made')
     subprocess.call(['python model.py &>/dev/null'], shell=True)
-    if not check_status() == 'nothing to commit, working tree clean':
-        errors.append('mummify didn\'t properly commit everything')
-    if not check_log_line_count() == 2:
-        errors.append('mummify didn\'t properly log')
-    assert not errors, 'errors occured:\n{}'.format('\n'.join(errors))
 
-def test_multiple_changes():
-    fake_change(file, 0.72)
-    subprocess.call(['python model.py &>/dev/null'], shell=True)
-    fake_change(file, 0.74)
-    subprocess.call(['python model.py &>/dev/null'], shell=True)
-    errors = []
-    if not check_log_line_count() == 4:
-        errors.append('mummify didn\'t properly log')
-    assert not errors, 'errors occured:\n{}'.format('\n'.join(errors))
-
-def test_mummify_history():
+def check_history():
     history = (
         subprocess.check_output(['mummify history'], shell=True)
-        .decode('utf-8').strip())
-    assert history.count('*') == 5
-
+        .decode('utf-8').strip()
+    )
+    return history
 
 def tear_down_mummify():
-    subprocess.call([f'rm .git .gitignore mummify.log {file}'], shell=True)
+    subprocess.call([f'rm .git .gitignore mummify.log model.py'], shell=True)
     subprocess.call(['rm -rf .mummify'], shell=True)
     return None
 
-test_first_mummify_log()
-test_first_change()
-test_multiple_changes()
-test_mummify_history()
-tear_down_mummify()
-
-# import mummify
-# mummify.history()
-
-#
-# if git:
-#     print('Hi')
-
-# history = subprocess.check_output(['mummify history'], shell=True).decode('utf-8').strip()
-# print(history)
-# history.splitlines()[-3].replace('*  ', '')
-#
-# history[-3]
-#
-# mummify_id = re.search('(?<=\n\*\s\s)(.*)(?=\n\*\s\smummify-start)', history).group(0)
-#
-# subprocess.call([f'mummify switch {mummify_id}'], shell=True)
-#
-
-#
-# tear_down_mummify()
+def test_mummify():
+    os.chdir('tests')
+    setup_mummify()
+    assert check_status() == 'nothing to commit, working tree clean'
+    assert check_log_line_count() == 1
+    simulate_change(0.75)
+    assert check_log_line_count() == 2
+    simulate_change(0.82)
+    simulate_change(0.87)
+    simulate_change(0.85)
+    assert check_log_line_count() == 5
+    assert check_history().count('*') == 6
+    with open('mummify.log', 'r') as f:
+        log = f.readlines()
+    log_line = log[3]
+    mummify_id = re.search(r'(?<=\-)(.*)(?=\])', log_line).group(0)
+    subprocess.call([f'mummify switch {mummify_id}'], shell=True)
+    assert check_history().count('*') == 7
+    with open('model.py', 'r') as f:
+        model = f.read()
+    score = float(re.search(r'(?<=\=\s)(.*)(?=\n)', model).group(0))
+    assert score == 0.87
+    tear_down_mummify()
