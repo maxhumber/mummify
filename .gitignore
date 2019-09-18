@@ -1,5 +1,7 @@
 # custom
 .mummify
+tests/.gitignore
+tests/model.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

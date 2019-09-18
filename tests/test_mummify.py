@@ -6,7 +6,7 @@ import subprocess
 import mummify
 
 def setup_mummify():
-    subprocess.call(["echo 'test_mummify.py' >> .gitignore"], shell=True)
+    subprocess.check_call(["echo 'test_mummify.py' >> .gitignore"], shell=True)
     contents = '''
 import mummify
 accuracy = 0.80
@@ -14,7 +14,7 @@ mummify.log(f'Accruacy: {accuracy:.3f}')
 '''
     with open('model.py', 'w+') as f:
         f.write(contents)
-    subprocess.call(['python model.py &>/dev/null'], shell=True)
+    subprocess.check_call(['python model.py'], shell=True)
 
 def check_status():
     git_status = subprocess.Popen(
