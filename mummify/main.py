@@ -32,7 +32,7 @@ def history():
     graph = shell(
         'git --git-dir=.mummify log --graph --decorate --oneline',
         capture_output=True)
-    graph = re.sub('\s([a-zA-Z0-9_-]){7}\s', '  ', graph)
+    graph = re.sub(r'\s([a-zA-Z0-9_-]){7}\s', '  ', graph)
     graph = re.sub(r'\(HEAD -> master\)', 'HEAD', graph)
     return '\n' + graph + '\n'
 
@@ -41,7 +41,7 @@ def find(id):
     log_item = shell(
         f'git --git-dir=.mummify log --all --grep={id}',
         capture_output=True)
-    commit = re.findall('(?<=commit\s)(.*?)(?=\n)',log_item)[0]
+    commit = re.findall(r'(?<=commit\s)(.*?)(?=\n)',log_item)[0]
     return commit
 
 def switch(id):
