@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from setuptools import setup
 
 with open('README.md') as f:
@@ -8,17 +5,16 @@ with open('README.md') as f:
 
 setup(
     name='mummify',
-    version='0.3.3',
-    description='Git + Logging for ML',
+    version='0.9.1',
+    description='git + logging for ML',
     long_description=long_description,
     long_description_content_type="text/markdown",
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Version Control',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
