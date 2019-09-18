@@ -1,9 +1,8 @@
 import logging
-import uuid
+from pathlib import Path
 import re
 import subprocess
-from ast import literal_eval
-from pathlib import Path
+import uuid
 
 LOGFILE = 'mummify.log'
 
@@ -12,8 +11,7 @@ def shell(command, capture_output=False, silent=True):
     if type(command) is str:
         command = [command]
     if capture_output:
-        o = [
-            subprocess.check_output([c], shell=True)
+        o = [subprocess.check_output([c], shell=True)
             .decode('utf-8')
             .strip()
             for c in command]
@@ -31,7 +29,8 @@ def colour(string):
 
 def history():
     '''View modified git graph (CLI)'''
-    graph = shell('git --git-dir=.mummify log --graph --decorate --oneline',
+    graph = shell(
+        'git --git-dir=.mummify log --graph --decorate --oneline',
         capture_output=True)
     graph = re.sub('\s([a-zA-Z0-9_-]){7}\s', '  ', graph)
     graph = re.sub(r'\(HEAD -> master\)', 'HEAD', graph)
@@ -39,7 +38,8 @@ def history():
 
 def find(id):
     '''Find git commit based on mummify id'''
-    log_item = shell(f'git --git-dir=.mummify log --all --grep={id}',
+    log_item = shell(
+        f'git --git-dir=.mummify log --all --grep={id}',
         capture_output=True)
     commit = re.findall('(?<=commit\s)(.*?)(?=\n)',log_item)[0]
     return commit
