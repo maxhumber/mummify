@@ -52,6 +52,8 @@ def test_mummify():
     os.chdir('tests')
     setup_mummify()
     print(subprocess.check_output(['git --version'], shell=True).decode('utf-8'))
+    print(subprocess.check_output(['pwd'], shell=True).decode('utf-8'))
+    print(subprocess.check_output(['ls'], shell=True).decode('utf-8'))
     assert check_status() == 'nothing to commit, working tree clean'
     assert check_log_line_count() == 1
     simulate_change(0.75)
