@@ -7,8 +7,7 @@ import mummify
 
 def setup_mummify():
     subprocess.check_call(["echo 'test_mummify.py' >> .gitignore"], shell=True)
-    contents = '''
-import mummify
+    contents = '''import mummify
 accuracy = 0.80
 mummify.log(f'Accruacy: {accuracy:.3f}')
 '''
@@ -34,7 +33,7 @@ def simulate_change(new):
         f.seek(0)
         f.write(contents)
         f.truncate()
-    subprocess.call(['python model.py &>/dev/null'], shell=True)
+    subprocess.check_call(['python model.py'], shell=True)
 
 def check_history():
     history = (
@@ -44,16 +43,16 @@ def check_history():
     return history
 
 def tear_down_mummify():
-    subprocess.call([f'rm .git .gitignore mummify.log model.py'], shell=True)
-    subprocess.call(['rm -rf .mummify'], shell=True)
+    subprocess.check_call([f'rm .git .gitignore mummify.log model.py'], shell=True)
+    subprocess.check_call(['rm -rf .mummify'], shell=True)
     return None
 
 def test_mummify():
     os.chdir('tests')
     setup_mummify()
-    print(subprocess.check_output(['git --version'], shell=True).decode('utf-8'))
-    print(subprocess.check_output(['pwd'], shell=True).decode('utf-8'))
-    print(subprocess.check_output(['ls'], shell=True).decode('utf-8'))
+    # print(subprocess.check_output(['git --version'], shell=True).decode('utf-8'))
+    # print(subprocess.check_output(['pwd'], shell=True).decode('utf-8'))
+    # print(subprocess.check_output(['ls'], shell=True).decode('utf-8'))
     assert check_status() == 'nothing to commit, working tree clean'
     assert check_log_line_count() == 1
     simulate_change(0.75)
