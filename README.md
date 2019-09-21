@@ -10,22 +10,23 @@
 
 #### About
 
-mummify makes model prototyping faster. The package manages git and performance logging for your machine learning project so that you can focus on what's important...
+mummify makes model prototyping faster. The package automagically takes care of git and logging for your machine learning project so that you can focus on what's important.
 
 #### Functions
 
-mummify is composed of just three simple functions:
+mummify is one function and two command line tools:
 
 - `log` - to automatically log and commit model changes
-- `history` - to view model changes over time
-- `switch` - to switch back to an earlier version of your model
+- `mummify history` - to view those changes
+- `mummify switch` - to go back to a different version of your model
 
 #### Usage
 
-Import `mummify` at the top of your script (in this case, `model.py`) and add `mummify.log(<message>)` at the very end:
+mummify is simple to use. Just add `import mummify` at the top and `mummify.log(<string>)` at the bottom of your model:
 
-```
+```python
 import mummify
+
 from sklearn.datasets import load_wine
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
@@ -40,55 +41,43 @@ X_train, X_test, y_train, y_test = train_test_split(
 model = KNeighborsClassifier()
 model.fit(X_train, y_train)
 accuracy = model.score(X_test, y_test)
+
 mummify.log(f'Test accuracy: {accuracy:.3f}')
 ```
 
-When you call `python model.py` from the command line, mummify will initialize a protected `.mummify` git directory, create a `mummify.log` file, and automtically keep track of model performance:
+When you run your model (`python model.py`) for the first time mummify will create a protected `.mummify ` git folder and will start to log messages to a `mummify.log` file. 
 
-![](https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify-init.png)
+When you make changes and run everything again:
 
-Whenever you make a change to your model (try a different algorithm)...
-
-```
-import mummify
-from sklearn.datasets import load_wine
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-
-data = load_wine()
-y = data.target
-X = data.data
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42)
-
+```python
+...
 model = LogisticRegression()
 model.fit(X_train, y_train)
 accuracy = model.score(X_test, y_test)
+
 mummify.log(f'Test accuracy: {accuracy:.3f}')
 ```
 
-...and re-run `python model.py` mummify will update the `mummify.log` file and save the state of your model:
-
-![](https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify-first-change.png)
+mummify will update the `mummify.log` file and save a snapshot of your working directory.
 
 To view the history of your model, just run  `mummify history` from the command line:
 
+```sh
+max$ mummify history
+
+*  HEAD mummify-3d15c7c2
+*  mummify-2d234a8a
+*  mummify-1fad5388
+*  mummify-root
 ```
-max-mbp:quick-start max$ mummify history
 
-*  HEAD mummify-f0e66a82
-*  mummify-75dea5e9
-*  mummify-start
+And to go back to a previous snapshot of your model just grab the mummify id from the `mummify.log` file and run `mummify switch <id>` from the command line:
 
-max-mbp:quick-start max$
+```sh
+max$ mummify switch mummify-2d234a8a
 ```
 
-And to rewind or jump back to a previous state, just grab the mummify identifier that you would like switch to from the `mummify.log` file and run `mummify switch <id>` from the command line:
-
-![](https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify-switch.png)
-
-mummify will preserve all state history during and after a switch and keep the `mummify.log` file immutable.
+mummify will preserve all state history during and after a switch and keep the `mummify.log` file intact.
 
 #### Installation
 

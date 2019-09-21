@@ -6,6 +6,7 @@ import uuid
 
 LOGFILE = 'mummify.log'
 
+# TODO: fix silent
 def run(command, output=False, silent=True):
     '''Run shell commands'''
     # if silent and not output:
@@ -25,10 +26,9 @@ def init_mummify():
     '''Initialize mummify'''
     run('git init --separate-git-dir .mummify')
     run("echo '.mummify' >> .gitignore")
-    run("echo 'main.py' >> .gitignore") # delete after testing
-    run("echo '__pycache__' >> .gitignore") # delete after testing
+    run("echo '__pycache__' >> .gitignore") # delete
     run('git --git-dir=.mummify add .gitignore')
-    run('git --git-dir=.mummify commit -m "mummify-initialized"')
+    run('git --git-dir=.mummify commit -m "mummify-root"')
     colour('mummify initialized')
 
 def history():
@@ -80,7 +80,7 @@ def switch(id):
     run('git --git-dir=.mummify branch -D switcher')
 
 def log(message):
-    '''Main application interface'''
+    '''Log a message to mummify.log and save a snapshot'''
     logging.basicConfig(
         filename=LOGFILE,
         level=logging.INFO,
@@ -99,5 +99,6 @@ def log(message):
     colour(message)
     commit(BRANCH)
 
-def cleanup():
-    run('rm -rf .gitignore .git .mummify mummify.log')
+# # delete
+# def cleanup():
+#     run('rm -rf .gitignore .git .mummify mummify.log')
