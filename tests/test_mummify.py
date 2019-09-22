@@ -5,6 +5,9 @@ import subprocess
 
 import mummify
 
+# BE CAREFUL
+# os.chdir('tests')
+
 def setup_mummify():
     subprocess.run("echo 'test_mummify.py' >> .gitignore", shell=True)
     subprocess.run("echo '__pycache__' >> .gitignore", shell=True)
@@ -12,7 +15,7 @@ def setup_mummify():
 accuracy = 0.80
 mummify.log(f'Accruacy: {accuracy:.3f}')
 '''
-    with open('model.py', 'w+') as f:
+    with open('model.py', 'w') as f:
         f.write(contents)
     subprocess.run('python model.py', shell=True)
 
