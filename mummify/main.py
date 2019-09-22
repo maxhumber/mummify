@@ -6,7 +6,6 @@ import uuid
 
 LOGFILE = 'mummify.log'
 
-
 def run(command, output=False, silent=False):
     '''Run shell commands'''
     if silent:
@@ -98,7 +97,3 @@ def log(message):
     logger.info(message)
     colour(message)
     commit(BRANCH)
-
-# # delete
-# def cleanup():
-#     run('rm -rf .gitignore .git .mummify mummify.log')

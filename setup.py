@@ -5,7 +5,7 @@ with open('README.md', encoding='utf-8') as f:
 
 setup(
     name='mummify',
-    version='0.9.0',
+    version='1.0',
     description='git + logging for ML',
     long_description=long_description,
     long_description_content_type="text/markdown",
