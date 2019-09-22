@@ -10,7 +10,7 @@ LOGFILE = 'mummify.log'
 def run(command, output=False, silent=False):
     '''Run shell commands'''
     if silent:
-        command += ' &>/dev/null'
+        command += ' --quiet'
     if output:
         s = subprocess.run(command, capture_output=True, shell=True)
         output = s.stdout.decode('utf-8').strip()
@@ -51,10 +51,10 @@ def create_branch(BRANCH):
 def commit(BRANCH):
     '''Commit run to .mummify'''
     run('git --git-dir=.mummify add .')
-    run(f'git --git-dir=.mummify commit -m {BRANCH} --quiet')
-    run('git --git-dir=.mummify checkout master --quiet')
-    run(f'git --git-dir=.mummify merge {BRANCH} --quiet')
-    run(f'git --git-dir=.mummify branch -d {BRANCH} --quiet')
+    run(f'git --git-dir=.mummify commit -m {BRANCH}', silent=True)
+    run('git --git-dir=.mummify checkout master', silent=True)
+    run(f'git --git-dir=.mummify merge {BRANCH}', silent=True)
+    run(f'git --git-dir=.mummify branch -d {BRANCH}', silent=True)
 
 def find(id):
     '''Find git commit based on mummify id'''
