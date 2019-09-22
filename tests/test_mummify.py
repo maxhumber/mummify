@@ -5,26 +5,16 @@ import subprocess
 
 import mummify
 
-# BE CAREFUL
-# os.chdir('tests')
-
 def setup_mummify():
     subprocess.run("echo 'test_mummify.py' >> .gitignore", shell=True)
     subprocess.run("echo '__pycache__' >> .gitignore", shell=True)
     contents = '''import mummify
 accuracy = 0.80
-mummify.log(f'Accruacy: {accuracy:.3f}')
+mummify.log(f'Accruacy: {accuracy}')
 '''
     with open('model.py', 'w') as f:
         f.write(contents)
     subprocess.run('python model.py', shell=True)
-
-def check_status():
-    s = subprocess.run(
-        'git --git-dir=.mummify status',
-        shell=True,
-        capture_output=True)
-    return s.stdout.decode('utf-8').strip()
 
 def check_log_line_count():
     s = subprocess.run('wc -l mummify.log', shell=True, capture_output=True)
@@ -51,21 +41,15 @@ def tear_down_mummify():
 def test_mummify():
     os.chdir('tests')
     setup_mummify()
-    assert 'nothing to commit' in check_status()
-    assert check_log_line_count() == 1
-    simulate_change(0.75)
-    assert check_log_line_count() == 2
-    simulate_change(0.82)
     simulate_change(0.87)
     simulate_change(0.85)
-    assert check_log_line_count() == 5
-    assert check_history().count('*') == 6
+    assert check_log_line_count() == 3
+    assert check_history().count('*') == 4
     with open('mummify.log', 'r') as f:
-        log = f.readlines()
-    log_line = log[3]
+        log_line = f.readlines()[1]
     mummify_id = re.search(r'(?<=\-)(.*)(?=\])', log_line).group(0)
     subprocess.run(f'mummify switch {mummify_id}', shell=True)
-    assert check_history().count('*') == 7
+    assert check_history().count('|') == 3
     with open('model.py', 'r') as f:
         model = f.read()
     score = float(re.search(r'(?<=\=\s)(.*)(?=\n)', model).group(0))
