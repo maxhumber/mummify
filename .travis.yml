@@ -5,16 +5,24 @@ matrix:
       python: 3.7
     - name: "Python 3.7.4 on macOS"
       os: osx
-      osx_image: xcode11    # Python 3.7.4 running on macOS 10.14.4
-      language: shell       # 'language: python' is an error on Travis CI macOS
+      osx_image: xcode11
+      language: shell
+    - name: "Python 3.7.4 on Windows"
+      os: windows
+      language: shell
+      before_install:
+        - choco install python
+        - python -m pip install --upgrade pip
+      env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
 deploy:
   provider: pypi
   user: maxhumber
   password: $PYPI_PASSWORD
 
 install:
-  - "pip install -e ."
-  - "pip install pytest"
+  - "pip3 install --upgrade pip"
+  - "pip3 install -e ."
+  - "pip3 install pytest"
 
 script:
   - pytest tests/

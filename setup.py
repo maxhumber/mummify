@@ -15,6 +15,7 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Software Development :: Version Control',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
@@ -27,6 +28,6 @@ setup(
         'console_scripts': ['mummify=mummify.cli:cli']
     },
     zip_safe=False,
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     setup_requires=['setuptools>=38.6.0']
 )
