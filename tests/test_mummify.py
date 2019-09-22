@@ -40,15 +40,26 @@ def tear_down_mummify():
 
 def test_mummify():
     os.chdir('tests')
+    print(subprocess.check_output('ls -a', shell=True))
     setup_mummify()
+    print(subprocess.check_output('git --git-dir=.mummify status', shell=True))
+    print(subprocess.check_output('ls -a', shell=True))
     simulate_change(0.87)
+    print(subprocess.check_output('git --git-dir=.mummify status', shell=True))
+    print(subprocess.check_output('ls -a', shell=True))
     simulate_change(0.85)
+    print(subprocess.check_output('git --git-dir=.mummify status', shell=True))
+    print(subprocess.check_output('ls -a', shell=True))
     assert check_log_line_count() == 3
     assert check_history().count('*') == 4
     with open('mummify.log', 'r') as f:
         log_line = f.readlines()[1]
     mummify_id = re.search(r'(?<=\-)(.*)(?=\])', log_line).group(0)
+    print(subprocess.check_output('git --git-dir=.mummify status', shell=True))
+    print(subprocess.check_output('ls -a', shell=True))
     subprocess.run(f'mummify switch {mummify_id}', shell=True)
+    print(subprocess.check_output('git --git-dir=.mummify status', shell=True))
+    print(subprocess.check_output('ls -a', shell=True))
     assert check_history().count('|') == 3
     with open('model.py', 'r') as f:
         model = f.read()
