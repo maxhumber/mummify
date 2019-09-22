@@ -24,7 +24,7 @@ def init_mummify():
     '''Initialize mummify'''
     run('git init --separate-git-dir .mummify', silent=True)
     run("echo '.mummify' >> .gitignore")
-    run("echo '__pycache__' >> .gitignore") # delete
+    run("echo '__pycache__' >> .gitignore")
     run('git --git-dir=.mummify add .gitignore')
     run('git --git-dir=.mummify commit -m "mummify-root"', silent=True)
     colour('Initializing mummify')
