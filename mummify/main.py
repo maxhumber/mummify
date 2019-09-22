@@ -6,7 +6,6 @@ import uuid
 
 LOGFILE = 'mummify.log'
 
-
 def run(command, output=False, silent=False):
     '''Run shell commands'''
     if silent:
