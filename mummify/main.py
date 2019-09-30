@@ -99,7 +99,7 @@ def switch(id):
 
     Example:
 
-    `max$ mummify switch mummify-2d234a8a`
+    `switch('mummify-2d234a8a')`
     '''
     commit = find(id)
     run('git --git-dir=.mummify checkout -b logger', silent=True)
