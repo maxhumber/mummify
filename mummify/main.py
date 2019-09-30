@@ -7,7 +7,16 @@ import uuid
 LOGFILE = 'mummify.log'
 
 def run(command, output=False, silent=False):
-    '''Run shell commands'''
+    '''Run shell commands
+
+    - command (str): a bash command
+    - output (bool, False): capture and return the STDOUT
+    - silent (bool, False): force commands to run silently
+
+    Example:
+
+    `run('git --git-dir=.mummify status')`
+    '''
     if silent:
         command += ' --quiet'
     if output:
@@ -17,7 +26,14 @@ def run(command, output=False, silent=False):
     subprocess.run(command, shell=True)
 
 def colour(string):
-    '''Paint it purple!'''
+    '''Paint it purple!
+
+    - string (str): colour a string purple
+
+    Example:
+
+    `purple('Hello World!')`
+    '''
     print(f"\033[35m{string}\033[0m")
 
 def init_mummify():
@@ -44,11 +60,17 @@ def check_status():
     return git_status
 
 def create_branch(BRANCH):
-    '''Create new mummify branch'''
+    '''Create new mummify branch
+
+    - BRANCH (str): branch UUID
+    '''
     run(f'git --git-dir=.mummify checkout -b {BRANCH}', silent=True)
 
 def commit(BRANCH):
-    '''Commit run to .mummify'''
+    '''Commit run to .mummify
+
+    - BRANCH (str): branch UUID
+    '''
     run('git --git-dir=.mummify add .')
     run(f'git --git-dir=.mummify commit -m {BRANCH}', silent=True)
     run('git --git-dir=.mummify checkout master', silent=True)
@@ -56,7 +78,14 @@ def commit(BRANCH):
     run(f'git --git-dir=.mummify branch -d {BRANCH}', silent=True)
 
 def find(id):
-    '''Find git commit based on mummify id'''
+    '''Find git commit based on mummify id
+
+    - id (str): branch UUID
+
+    Example:
+
+    `find('mummify-2d234a8a')`
+    '''
     log_item = run(
         f'git --git-dir=.mummify log --all --grep={id}',
         output=True)
@@ -64,7 +93,14 @@ def find(id):
     return commit
 
 def switch(id):
-    '''Switch to a specific mummify commit (CLI)'''
+    '''Switch to a specific mummify commit (CLI)
+
+    - id (str): branch UUID
+
+    Example:
+
+    `max$ mummify switch mummify-2d234a8a`
+    '''
     commit = find(id)
     run('git --git-dir=.mummify checkout -b logger', silent=True)
     run('git --git-dir=.mummify checkout -b switcher', silent=True)
@@ -79,7 +115,14 @@ def switch(id):
     return colour(f'Sucessfully switched to {id}')
 
 def log(message):
-    '''Log a message to mummify.log and save a snapshot'''
+    '''Log a message to mummify.log and save a snapshot
+
+    - message (str): message to be logged
+
+    Example:
+
+    `log('Accuracy: 0.98')`
+    '''
     logging.basicConfig(
         filename=LOGFILE,
         level=logging.INFO,

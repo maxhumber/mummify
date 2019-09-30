@@ -1,8 +1,15 @@
-import mummify
 import argparse
 from pathlib import Path
+import mummify
 
 def cli():
+    '''The command line interface for mummify
+
+    Commands:
+
+    - mummify history
+    - mummify switch
+    '''
     parser = argparse.ArgumentParser()
     parser.add_argument('function', choices=('history', 'switch'))
     parser.add_argument('id', nargs='?')
