@@ -10,7 +10,7 @@ def setup_mummify():
     subprocess.run("echo '__pycache__' >> .gitignore", shell=True)
     contents = '''import mummify
 accuracy = 0.80
-mummify.log(f'Accruacy: {accuracy}')
+mummify.log(f'Accuracy: {accuracy}')
 '''
     with open('model.py', 'w') as f:
         f.write(contents)
@@ -38,8 +38,7 @@ def tear_down_mummify():
         'rm -rf .gitignore .git .mummify mummify.log model.py',
         shell=True)
 
-def test_mummify():
-    os.chdir('tests')
+def simulate_mummify():
     setup_mummify()
     simulate_change(0.87)
     simulate_change(0.85)
@@ -54,4 +53,16 @@ def test_mummify():
         model = f.read()
     score = float(re.search(r'(?<=\=\s)(.*)(?=\n)', model).group(0))
     assert score == 0.87
+
+def test_mummify_bare():
+    os.chdir('tests')
+    simulate_mummify()
     tear_down_mummify()
+    os.chdir('..')
+
+def test_mummify_existing_git():
+    os.chdir('tests')
+    subprocess.run('git init', shell=True)
+    simulate_mummify()
+    tear_down_mummify()
+    os.chdir('..')

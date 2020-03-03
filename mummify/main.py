@@ -38,17 +38,17 @@ def colour(string):
 
 def init_mummify():
     '''Initialize mummify'''
-    run('git init --separate-git-dir .mummify', silent=True)
+    run('git --work-tree=. --git-dir=.mummify init', silent=True)
     run("echo '.mummify' >> .gitignore")
     run("echo '__pycache__' >> .gitignore")
-    run('git --git-dir=.mummify add .gitignore')
-    run('git --git-dir=.mummify commit -m "mummify-root"', silent=True)
+    run('git --work-tree=. --git-dir=.mummify add .gitignore')
+    run('git --work-tree=. --git-dir=.mummify commit -m "mummify-root"', silent=True)
     colour('Initializing mummify')
 
 def history():
     '''View modified git graph (CLI)'''
     graph = run(
-        'git --git-dir=.mummify log --graph --decorate --oneline',
+        'git --work-tree=. --git-dir=.mummify log --graph --decorate --oneline',
         output=True)
     graph = re.sub(r'\s([a-zA-Z0-9_-]){7}\s', '  ', graph)
     graph = re.sub(r'\(HEAD -> master\)', 'HEAD', graph)
@@ -56,7 +56,7 @@ def history():
 
 def check_status():
     '''Check mummify git status'''
-    git_status = run("git --git-dir=.mummify status", output=True)
+    git_status = run("git --work-tree=. --git-dir=.mummify status", output=True)
     return git_status
 
 def create_branch(BRANCH):
@@ -64,18 +64,18 @@ def create_branch(BRANCH):
 
     - BRANCH (str): branch UUID
     '''
-    run(f'git --git-dir=.mummify checkout -b {BRANCH}', silent=True)
+    run(f'git --work-tree=. --git-dir=.mummify checkout -b {BRANCH}', silent=True)
 
 def commit(BRANCH):
     '''Commit run to .mummify
 
     - BRANCH (str): branch UUID
     '''
-    run('git --git-dir=.mummify add .')
-    run(f'git --git-dir=.mummify commit -m {BRANCH}', silent=True)
-    run('git --git-dir=.mummify checkout master', silent=True)
-    run(f'git --git-dir=.mummify merge {BRANCH}', silent=True)
-    run(f'git --git-dir=.mummify branch -d {BRANCH}', silent=True)
+    run('git --work-tree=. --git-dir=.mummify add .')
+    run(f'git --work-tree=. --git-dir=.mummify commit -m {BRANCH}', silent=True)
+    run('git --work-tree=. --git-dir=.mummify checkout master', silent=True)
+    run(f'git --work-tree=. --git-dir=.mummify merge {BRANCH}', silent=True)
+    run(f'git --work-tree=. --git-dir=.mummify branch -d {BRANCH}', silent=True)
 
 def find(id):
     '''Find git commit based on mummify id
@@ -87,7 +87,7 @@ def find(id):
     `find('mummify-2d234a8a')`
     '''
     log_item = run(
-        f'git --git-dir=.mummify log --all --grep={id}',
+        f'git --work-tree=. --git-dir=.mummify log --all --grep={id}',
         output=True)
     commit = re.findall(r'(?<=commit\s)(.*?)(?=\n)', log_item)[0]
     return commit
@@ -102,16 +102,16 @@ def switch(id):
     `switch('mummify-2d234a8a')`
     '''
     commit = find(id)
-    run('git --git-dir=.mummify checkout -b logger', silent=True)
-    run('git --git-dir=.mummify checkout -b switcher', silent=True)
-    run(f'git --git-dir=.mummify reset --hard {commit}', silent=True)
-    run('git --git-dir=.mummify merge -s ours --no-commit master', silent=True)
-    run(f'git --git-dir=.mummify checkout logger {LOGFILE}', silent=True)
-    run(f'git --git-dir=.mummify commit -m "switch-{id}"', silent=True)
-    run('git --git-dir=.mummify checkout master', silent=True)
-    run('git --git-dir=.mummify merge switcher', silent=True)
-    run('git --git-dir=.mummify branch -D logger', silent=True)
-    run('git --git-dir=.mummify branch -D switcher', silent=True)
+    run('git --work-tree=. --git-dir=.mummify checkout -b logger', silent=True)
+    run('git --work-tree=. --git-dir=.mummify checkout -b switcher', silent=True)
+    run(f'git --work-tree=. --git-dir=.mummify reset --hard {commit}', silent=True)
+    run('git --work-tree=. --git-dir=.mummify merge -s ours --no-commit master', silent=True)
+    run(f'git --work-tree=. --git-dir=.mummify checkout logger {LOGFILE}', silent=True)
+    run(f'git --work-tree=. --git-dir=.mummify commit -m "switch-{id}"', silent=True)
+    run('git --work-tree=. --git-dir=.mummify checkout master', silent=True)
+    run('git --work-tree=. --git-dir=.mummify merge switcher', silent=True)
+    run('git --work-tree=. --git-dir=.mummify branch -D logger', silent=True)
+    run('git --work-tree=. --git-dir=.mummify branch -D switcher', silent=True)
     return colour(f'Sucessfully switched to {id}')
 
 def log(message):

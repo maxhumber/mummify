@@ -5,7 +5,7 @@ with open('README.md', encoding='utf-8') as f:
 
 setup(
     name='mummify',
-    version='1.0.2',
+    version='1.1.0',
     description='git + logging for ML',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -15,7 +15,6 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
         'Topic :: Software Development :: Version Control',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
