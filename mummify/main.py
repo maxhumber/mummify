@@ -43,7 +43,7 @@ def init_mummify():
     run("echo '__pycache__' >> .gitignore")
     run('git --work-tree=. --git-dir=.mummify add .gitignore')
     run('git --work-tree=. --git-dir=.mummify commit -m "mummify-root"', silent=True)
-    colour('Initializing mummify')
+    colour('Initializing mummify...')
 
 def history():
     '''View modified git graph (CLI)'''
@@ -105,11 +105,11 @@ def switch(id):
     run('git --work-tree=. --git-dir=.mummify checkout -b logger', silent=True)
     run('git --work-tree=. --git-dir=.mummify checkout -b switcher', silent=True)
     run(f'git --work-tree=. --git-dir=.mummify reset --hard {commit}', silent=True)
-    run('git --work-tree=. --git-dir=.mummify merge -s ours --no-commit master', silent=True)
-    run(f'git --work-tree=. --git-dir=.mummify checkout logger {LOGFILE}', silent=True)
+    run('git --work-tree=. --git-dir=.mummify merge -s ours --no-commit master &>/dev/null')
+    run(f'git --work-tree=. --git-dir=.mummify checkout logger {LOGFILE} &>/dev/null')
     run(f'git --work-tree=. --git-dir=.mummify commit -m "switch-{id}"', silent=True)
     run('git --work-tree=. --git-dir=.mummify checkout master', silent=True)
-    run('git --work-tree=. --git-dir=.mummify merge switcher', silent=True)
+    run('git --work-tree=. --git-dir=.mummify merge switcher &>/dev/null')
     run('git --work-tree=. --git-dir=.mummify branch -D logger', silent=True)
     run('git --work-tree=. --git-dir=.mummify branch -D switcher', silent=True)
     return colour(f'Sucessfully switched to {id}')

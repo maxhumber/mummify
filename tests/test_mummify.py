@@ -5,6 +5,9 @@ import subprocess
 
 import mummify
 
+os.chdir('tests')
+print(os.getcwd())
+
 def setup_mummify():
     subprocess.run("echo 'test_mummify.py' >> .gitignore", shell=True)
     subprocess.run("echo '__pycache__' >> .gitignore", shell=True)
@@ -31,11 +34,11 @@ def simulate_change(new):
 
 def check_history():
     s = subprocess.run('mummify history', capture_output=True, shell=True)
-    return s.stdout.decode('utf-8').strip()
+    return s.stderr.decode('utf-8').strip()
 
 def tear_down_mummify():
     subprocess.run(
-        'rm -rf .gitignore .git .mummify mummify.log model.py',
+        'rm -rf .gitignore .git .mummify mummify.log model.py __pycache__',
         shell=True)
 
 def simulate_mummify():
@@ -55,14 +58,10 @@ def simulate_mummify():
     assert score == 0.87
 
 def test_mummify_bare():
-    os.chdir('tests')
     simulate_mummify()
     tear_down_mummify()
-    os.chdir('..')
 
 def test_mummify_existing_git():
-    os.chdir('tests')
     subprocess.run('git init', shell=True)
     simulate_mummify()
     tear_down_mummify()
-    os.chdir('..')
