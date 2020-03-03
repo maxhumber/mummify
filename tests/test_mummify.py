@@ -6,7 +6,6 @@ import subprocess
 import mummify
 
 os.chdir('tests')
-print(os.getcwd())
 
 def setup_mummify():
     subprocess.run("echo 'test_mummify.py' >> .gitignore", shell=True)
