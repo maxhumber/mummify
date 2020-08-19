@@ -7,10 +7,15 @@
   <a href="https://pypi.python.org/pypi/mummify"><img alt="PyPI" src="https://img.shields.io/pypi/v/mummify.svg"></a>
   <a href="https://pepy.tech/project/mummify"><img alt="Downloads" src="https://pepy.tech/badge/mummify"></a>  
 </p>
+### About
 
-#### About
+`mummify` is a version control tool for machine learning. It's simple, fast, designed to help you focus on modeling. 
 
-mummify makes model prototyping faster. The package automagically takes care of git and logging for your machine learning project so that you can focus on what's important.
+### Quickstart
+
+
+
+
 
 #### Functions
 
