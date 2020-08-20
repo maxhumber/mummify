@@ -10,7 +10,7 @@
 
 ### About
 
-`mummify` is a version control tool for machine learning. It's simple, fast, designed to help you focus on modeling.
+`mummify` is a version control tool for machine learning. It's simple, fast, and designed for model prototyping.
 
 ### Quickstart
 
@@ -18,7 +18,7 @@
 
 ### Usage
 
-Import `mummify ` at the top and add `mummify.log(<string>)` to the bottom of your model:
+Add `mummify.log(<string>)` to the bottom of a machine learning model:
 
 ```python
 from sklearn.datasets import load_wine
@@ -36,13 +36,13 @@ accuracy = round(model.score(X, y), 4)
 mummify.log(f'Accuracy: {accuracy}')
 ```
 
-Run your model at the command:
+Run the model at the command line:
 
 ```sh
 python model.py
 ```
 
-Edit your model:
+Edit the model to implement another algorithm:
 
 ```python
 ...
@@ -53,25 +53,25 @@ accuracy = model.score(X_test, y_test)
 mummify.log(f'Test accuracy: {accuracy}')
 ```
 
-View model history at the command line with:
+Inspect model history at the command line with:
 
 ```sh
 mummify history
 ```
 
-And peek at the the logged messages with:
+And peek at the logged messages at the command line with:
 
 ```sh
 cat mummify.log
 ```
 
-Switch to an earlier model version:
+Switch to an earlier version of the model:
 
 ```sh
 mummify switch <id>
 ```
 
-`mummify` will persist snapshots and the `mummify.log` through switches so that you can quickly move between past versions of your model.
+`mummify` will persist snapshots and the `mummify.log` file between switches.
 
 #### Installation
 
