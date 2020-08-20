@@ -1,5 +1,5 @@
 <h3 align="center">
-  <img src="https://raw.githubusercontent.com/maxhumber/mummify/master/images/mummify.png" width="200px" alt="chart">
+  <img src="https://raw.githubusercontent.com/maxhumber/mummify/master/assets/mummify.png" width="200px" alt="mummify">
 </h3>
 <p align="center">
   <a href="https://github.com/maxhumber/gazpacho/blob/master/setup.py"><img alt="Dependencies" src="https://img.shields.io/badge/dependencies-0-green"></a>
@@ -7,52 +7,42 @@
   <a href="https://pypi.python.org/pypi/mummify"><img alt="PyPI" src="https://img.shields.io/pypi/v/mummify.svg"></a>
   <a href="https://pepy.tech/project/mummify"><img alt="Downloads" src="https://pepy.tech/badge/mummify"></a>  
 </p>
+
 ### About
 
-`mummify` is a version control tool for machine learning. It's simple, fast, designed to help you focus on modeling. 
+`mummify` is a version control tool for machine learning. It's simple, fast, designed to help you focus on modeling.
 
 ### Quickstart
 
+<img src="https://raw.githubusercontent.com/maxhumber/mummify/master/assets/quickstart.gif" width="400px" alt="quickstart">
 
+### Usage
 
-
-
-#### Functions
-
-mummify is one function and two command line tools:
-
-- `log` - to automatically log and commit model changes
-- `mummify history` - to view those changes
-- `mummify switch` - to go back to a different version of your model
-
-#### Usage
-
-mummify is simple to use. Just add `import mummify` at the top and `mummify.log(<string>)` at the bottom of your model:
+Import `mummify ` at the top and add `mummify.log(<string>)` to the bottom of your model:
 
 ```python
-import mummify
-
 from sklearn.datasets import load_wine
-from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 
+import mummify
+
 data = load_wine()
-y = data.target
-X = data.data
+X, y = data.data, data.target
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42)
+model = KNeighborsClassifier(n_neighbors=4)
+model.fit(X, y)
+accuracy = round(model.score(X, y), 4)
 
-model = KNeighborsClassifier()
-model.fit(X_train, y_train)
-accuracy = model.score(X_test, y_test)
-
-mummify.log(f'Test accuracy: {accuracy:.3f}')
+mummify.log(f'Accuracy: {accuracy}')
 ```
 
-When you run your model (`python model.py`) for the first time mummify will create a protected `.mummify ` git folder and will start to log messages to a `mummify.log` file.
+Run your model at the command:
 
-When you make changes and run everything again:
+```sh
+python model.py
+```
+
+Edit your model:
 
 ```python
 ...
@@ -60,29 +50,28 @@ model = LogisticRegression()
 model.fit(X_train, y_train)
 accuracy = model.score(X_test, y_test)
 
-mummify.log(f'Test accuracy: {accuracy:.3f}')
+mummify.log(f'Test accuracy: {accuracy}')
 ```
 
-mummify will update the `mummify.log` file and save a snapshot of your working directory.
-
-To view the history of your model, just run  `mummify history` from the command line:
+View model history at the command line with:
 
 ```sh
-max$ mummify history
-
-*  HEAD mummify-3d15c7c2
-*  mummify-2d234a8a
-*  mummify-1fad5388
-*  mummify-root
+mummify history
 ```
 
-And to go back to a previous snapshot of your model just grab the mummify id from the `mummify.log` file and run `mummify switch <id>` from the command line:
+And peek at the the logged messages with:
 
 ```sh
-max$ mummify switch mummify-2d234a8a
+cat mummify.log
 ```
 
-mummify will preserve all state history during and after a switch and keep the `mummify.log` file intact.
+Switch to an earlier model version:
+
+```sh
+mummify switch <id>
+```
+
+`mummify` will persist snapshots and the `mummify.log` through switches so that you can quickly move between past versions of your model.
 
 #### Installation
 

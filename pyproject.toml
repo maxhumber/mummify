@@ -2,7 +2,7 @@
 output_dir = "site"
 
 [tool.portray.mkdocs.theme]
-favicon = "images/icon.png"
-logo = "images/icon.png"
+favicon = "assets/icon.png"
+logo = "assets/icon.png"
 name = "material"
 palette = {primary = "black", accent = "cyan"}
