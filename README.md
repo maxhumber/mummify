@@ -47,10 +47,10 @@ Edit the model to implement another algorithm:
 ```python
 ...
 model = LogisticRegression()
-model.fit(X_train, y_train)
-accuracy = model.score(X_test, y_test)
+model.fit(X, y)
+accuracy = round(model.score(X, y), 4)
 
-mummify.log(f'Test accuracy: {accuracy}')
+mummify.log(f'Accuracy: {accuracy}')
 ```
 
 Inspect model history at the command line with:
