@@ -73,12 +73,12 @@ mummify switch <id>
 
 `mummify` will persist snapshots and the `mummify.log` file between switches.
 
-#### Installation
+### Installation
 
 ```sh
 pip install mummify
 ```
 
-#### Contribute
+### Contribute
 
 For feature requests or bug reports, please use [Github Issues](https://github.com/maxhumber/chart/issues)
