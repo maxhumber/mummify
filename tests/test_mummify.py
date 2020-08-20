@@ -37,7 +37,7 @@ def simulate_change(new):
 
 def check_history():
     s = subprocess.run("mummify history", capture_output=True, shell=True)
-    return s.stderr.decode("utf-8").strip()
+    return s.stdout.decode("utf-8").strip()
 
 
 def tear_down_mummify():
@@ -51,10 +51,10 @@ def simulate_mummify():
     simulate_change(0.87)
     simulate_change(0.85)
     assert check_log_line_count() == 3
-    assert check_history().count("*") == 4
+    assert check_history().count("*") == 3
     with open("mummify.log", "r") as f:
         log_line = f.readlines()[1]
-    mummify_id = re.search(r"(?<=\-)(.*)(?=\])", log_line).group(0)
+    mummify_id = re.search(r"(?<=\[)(.*)(?=\])", log_line).group(0)
     subprocess.run(f"mummify switch {mummify_id}", shell=True)
     assert check_history().count("|") == 3
     with open("model.py", "r") as f:

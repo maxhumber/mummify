@@ -16,7 +16,7 @@ def run(command, output=False, silent=False):
 
     Example:
 
-    `run('git --git-dir=.mummify status')`
+    `run("git --git-dir=.mummify status")`
     """
     if silent:
         command += " --quiet"
@@ -56,7 +56,7 @@ def history():
         output=True,
     )
     graph = re.sub(r"\s([a-zA-Z0-9_-]){7}\s", "  ", graph)
-    graph = re.sub(r"\(HEAD -> master\)", "◀", graph)
+    graph = graph.replace(" (HEAD -> master)", "◀")
     graph = graph.replace("*  000000", "").strip()
     lines = graph.split('\n')[::-1]
     graph = ''
@@ -105,7 +105,7 @@ def find(id):
 
     Example:
 
-    `find('mummify-2d234a')`
+    `find("2d234a")`
     """
     log_item = run(
         f"git --work-tree=. --git-dir=.mummify log --all --grep={id}", output=True
@@ -121,7 +121,7 @@ def switch(id):
 
     Example:
 
-    `switch('mummify-2d234a')`
+    `switch("2d234a")`
     """
     assert len(id) == 6
     commit = find(id)

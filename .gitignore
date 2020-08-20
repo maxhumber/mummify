@@ -2,6 +2,7 @@
 .mummify
 tests/.gitignore
 tests/model.py
+quickstart/.gitignore
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
